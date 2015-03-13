@@ -1,35 +1,41 @@
 {
-	"viewports" : [
-		{
-			"name": "phone",
-			"width": 320,
-			"height": 480
-		},
-		{
-			"name": "tablet_v",
-			"width": 568,
-			"height": 1024
-		},
-		{
-			"name": "tablet_h",
-			"width": 1024,
-			"height": 768
-		}
-	],
-	"scenarios" : [
-		{
-			"testName":"simple",
-			"url":"test/simple.html",
-			"hideSelectors": [
-			],
-			"removeSelectors": [
-			],
-			"selectors":[
-				"body"
-			],
-			"readyEvent":"backstop.ready",
-			"delay":0
-		}
-	]
+    "viewports" : [
+        {
+            "name": "phone",
+            "width": 320,
+            "height": 480
+        },
+        {
+          "name": "Apple iPhone 6 Plus",
+          "width": 414,
+          "height": 736,
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4"
+        },
+        {
+            "name": "tablet_v",
+            "width": 568,
+            "height": 1024
+        },
+        {
+            "name": "tablet_h",
+            "width": 1024,
+            "height": 768
+        }
+    ],
+    "scenarios" : [
+        {
+            "testName":"simple",
+            "url":"test/simple.html",
+            "hideSelectors": [
+            ],
+            "removeSelectors": [
+            ],
+            "selectors":[
+                "body"
+            ],
+            "readyEvent":"backstop.ready",
+            "delay":0
+        }
+    ]
 }
 
