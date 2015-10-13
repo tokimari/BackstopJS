@@ -17,6 +17,7 @@ var bitmaps_test = config.paths.bitmaps_test || 'bitmaps_test';
 var compareConfigFileName = config.paths.compare_data || 'compare/config.json';
 var viewports = config.viewports;
 var scenarios = config.scenarios||config.grabConfigs;
+var scriptTimeout = config.script_timeout || 20000;
 
 var compareConfig = {testPairs:[]};
 
@@ -48,7 +49,7 @@ casper.on('resource.received', function(resource) {
 
 
 
-function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_test,isReference){
+function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_test,isReference,scriptTimeout){
 
   var
     screenshotNow = new Date(),
@@ -56,7 +57,6 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
 
 
   var consoleBuffer = '';
-  var scriptTimeout = 20000;
 
 
   casper.on('remote.message', function(message) {
@@ -203,6 +203,7 @@ capturePageSelectors(
   ,bitmaps_reference
   ,bitmaps_test
   ,isReference
+  ,scriptTimeout
 );
 
 casper.run(function(){
