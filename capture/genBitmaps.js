@@ -1,4 +1,3 @@
-
 var fs = require('fs');
 
 var selectorNotFoundPath = 'capture/resources/selectorNotFound_noun_164558_cc.png'
@@ -145,7 +144,13 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
         scenario.selectors.forEach(function(o,i,a){
           var cleanedSelectorName = o.replace(/[^a-zA-Z\d]/,'');//remove anything that's not a letter or a number
           //var cleanedUrl = scenario.url.replace(/[^a-zA-Z\d]/,'');//remove anything that's not a letter or a number
-          var fileName = scenario_index + '_' + i + '_' + cleanedSelectorName + '_' + viewport_index + '_' + vp.name + '.png';;
+
+          var fileName = cleanedSelectorName + '_';
+          // Use scene of scenario
+          if ( scenario.scene != null ) {
+            fileName = fileName + scenario.scene + '_';
+          }
+          fileName = fileName + viewport_index + '_' + vp.name + '.png'
 
           var reference_FP  = bitmaps_reference + '/' + fileName;
           var test_FP       = bitmaps_test + '/' + screenshotDateTime + '/' + fileName;
