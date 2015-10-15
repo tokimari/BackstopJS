@@ -3,19 +3,28 @@ var open  = require("gulp-open");
 var isWin = require('../util/isWin');
 var paths = require('../util/paths');
 var rename = require('gulp-rename');
-var jeditor = require("gulp-json-editor");
+var fs  = require('fs');
 
 var referenceDir = './bitmaps_reference/';
 var testDir = './bitmaps_test/';
+var pastTestListFileName = paths.comparePath + '/past_tests.json'
 
 gulp.task("openReport", function(){
 
   console.log('\nTesting with ',paths.compareConfigFileName);
   console.log('Opening report -> ',paths.compareReportURL + '\n');
 
+  // write past test dates data
+  pastTestsDate = fs.readdirSync(paths.bitmaps_test);
+  fs.writeFile(pastTestListFileName, JSON.stringify({
+    "dates": pastTestsDate
+  }), function(err) {
+    openReport();
+  });
+
   var options = {
-    url: paths.compareReportURL
-    ,app: isWin ? "chrome" : "Google Chrome"
+    url: paths.compareReportURL,
+    app: isWin ? "chrome" : "Google Chrome"
   };
 
   // cache bitmaps_reference files locally
@@ -26,19 +35,11 @@ gulp.task("openReport", function(){
   gulp.src(paths.bitmaps_test + '/**/*')
     .pipe(gulp.dest(testDir));
 
-
-  gulp.src(paths.compareConfigFileName)
-    .pipe(jeditor(function(json) {
-      json.testPairs.forEach(function(item){
-        var rFile = referenceDir + item.reference.split('/').slice(-1)[0];
-        var tFile = testDir + item.test.split('/').slice(-2).join('/');
-        item.local_reference = rFile;
-        item.local_test = tFile;
-      })
-      return json;
-    }))
-    .pipe(rename('compare/config.json'))
-    .pipe(gulp.dest('.'))
-    .pipe(open("",options));
-
+  // FIXME: これ必要？？
+  var openReport = function() {
+    gulp.src(paths.compareConfigFileName)
+      .pipe(rename('compare/config.json'))
+      .pipe(gulp.dest('.'))
+      .pipe(open("",options));
+    }
 });

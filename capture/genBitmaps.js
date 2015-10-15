@@ -3,21 +3,28 @@ var fs = require('fs');
 
 var selectorNotFoundPath = 'capture/resources/selectorNotFound_noun_164558_cc.png'
 var hiddenSelectorPath = 'capture/resources/hiddenSelector_noun_63405.png'
+var referenceDir = './bitmaps_reference/';
+var testDir = './bitmaps_test/';
 var genConfigPath = 'capture/config.json'
+var
+  screenshotNow = new Date(),
+  screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
 
 
 var configJSON = fs.read(genConfigPath);
 var config = JSON.parse(configJSON);
+
 if (!config.paths) {
   config.paths = {};
 }
 
 var bitmaps_reference = config.paths.bitmaps_reference || 'bitmaps_reference';
 var bitmaps_test = config.paths.bitmaps_test || 'bitmaps_test';
-var compareConfigFileName = config.paths.compare_data || 'compare/config.json';
+var compareConfigFileName = config.paths.compare_data || 'compare/config-' + screenshotDateTime + '.json';
 var viewports = config.viewports;
 var scenarios = config.scenarios||config.grabConfigs;
 var scriptTimeout = config.script_timeout || 20000;
+
 
 var compareConfig = {testPairs:[]};
 
@@ -50,11 +57,6 @@ casper.on('resource.received', function(resource) {
 
 
 function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_test,isReference,scriptTimeout){
-
-  var
-    screenshotNow = new Date(),
-    screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
-
 
   var consoleBuffer = '';
 
@@ -171,7 +173,9 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
               selector:o,
               fileName:fileName,
               label:scenario.label,
-              misMatchThreshold: scenario.misMatchThreshold
+              misMatchThreshold: scenario.misMatchThreshold,
+              local_reference: referenceDir + reference_FP.split('/').slice(-1)[0],
+              local_test: testDir + test_FP.split('/').slice(-2).join('/')
             });
           }
           //casper.echo('remote capture to > '+filePath,'info');

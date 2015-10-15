@@ -52,9 +52,9 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
 
   var testPairObj = function(a,b,c,o){
     this.a={src:a||'',srcClass:'reference'},
-      this.b={src:b||'',srcClass:'test'},
-      this.c={src:c||'',srcClass:'diff'},
-      this.report=null;
+    this.b={src:b||'',srcClass:'test'},
+    this.c={src:c||'',srcClass:'diff'},
+    this.report=null;
     this.processing=true;
     this.passed=false;
     this.meta = o;
@@ -64,11 +64,12 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   $scope.$on("$routeChangeSuccess", function( $currentRoute, $previousRoute ){
     $scope.params = JSON.stringify($routeParams,null,2);
     $scope.action = $route.current.action;
+    console.log('routeChangeSuccess', $currentRoute, $previousRoute, $routeParams);
 
     if($scope.action=='url')
       $scope.runUrlConfig($routeParams);
     else
-      $scope.runFileConfig($routeParams);
+      $scope.runPastFilesConfig($routeParams);
 
 
   });
@@ -82,11 +83,24 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   };
 
 
-  //READS CONFIG FROM FILE AND RUNS IMG DIFF TEST
-  $scope.runFileConfig = function(params){
-    $http.get('./config.json')
+  //READS CONFIG FROM PAST TESTS DATE FILE
+  $scope.runPastFilesConfig = function(params){
+    $http.get('./past_tests.json')
       .success(function(data, status) {
-        // console.log('got data!',status,data);
+        console.log('got past test dates!',status,data);
+        $scope.pastDates = data.dates;
+        $scope.runFileConfig(data.dates[data.dates.length - 1]); // latest date
+      })
+      .error(function(data, status) {
+        console.log('config file operation failed '+status);
+      });
+  };
+
+  // RUNS IMG DIFF TEST
+  $scope.runFileConfig = function(captureDate) {
+    $http.get('./config-' + captureDate + '.json')
+      .success(function(data, status) {
+        console.log('got data!',status,data);
         data.testPairs.forEach(function(o,i,a){
           $scope.testPairs.push(new testPairObj('../'+o.local_reference, '../'+o.local_test, null, o));
         });

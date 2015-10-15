@@ -22,7 +22,6 @@
     "gulp-jscs": "^1.6.x",
     "gulp-jscs-stylish": "^1.1.x",
     "gulp-jshint": "^1.11.x",
-    "gulp-json-editor": "^2.2.1",
     "gulp-open": "^0.3.0",
     "gulp-rename": "^1.2.0",
     "http-proxy": "~1.1.4",
