@@ -22,9 +22,9 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   var defaultMisMatchThreshold = 1;
 
   //A TEST PAIR ARE TWO IMAGE OBJECTS PLUS THEIR META DATA WHICH WILL BE COMPARED BY RESEMBLE
-  $scope.testPairs = [];
+  $scope.currentTestPairs = [];
 
-  $scope.testPairsCompleted = 0;
+  $scope.currentTestPairsCompleted = 0;
   $scope.passedCount = 0;
   $scope.testDuration = 0;
   $scope.testIsRunning = true;
@@ -78,8 +78,8 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   //TAKES PARAMETERS FROM URL AND RUNS IMG DIFF TEST
   $scope.runUrlConfig = function(params){
     console.log(params);
-    $scope.testPairs.push(new testPairObj('../'+params.a, '../'+params.b, null));
-    $scope.compareTestPair($scope.testPairs[0]);
+    $scope.currentTestPairs.push(new testPairObj('../'+params.a, '../'+params.b, null));
+    $scope.compareTestPair($scope.currentTestPairs[0]);
   };
 
 
@@ -102,9 +102,9 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
       .success(function(data, status) {
         console.log('got data!',status,data);
         data.testPairs.forEach(function(o,i,a){
-          $scope.testPairs.push(new testPairObj('../'+o.local_reference, '../'+o.local_test, null, o));
+          $scope.currentTestPairs.push(new testPairObj('../'+o.local_reference, '../'+o.local_test, null, o));
         });
-        $scope.compareTestPairs($scope.testPairs);
+        $scope.compareTestPairs($scope.currentTestPairs);
 
       })
       .error(function(data, status) {
@@ -124,7 +124,7 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
       ,function(testPair,cb){
         $scope.compareTestPair(testPair,function(o){
           if(o.passed)$scope.passedCount++;
-          $scope.testPairsCompleted++;
+          $scope.currentTestPairsCompleted++;
           $scope.testDuration = (new Date()-startTs);
           $scope.$digest();
           cb();
@@ -132,7 +132,7 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
       }
       ,function(){
         $scope.testIsRunning = false;
-        if($scope.passedCount == $scope.testPairsCompleted)
+        if($scope.passedCount == $scope.currentTestPairsCompleted)
           $scope.statusFilter='passed';
         else
           $scope.statusFilter='failed';

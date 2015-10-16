@@ -19,19 +19,19 @@
     <div class="container"><h1>BackstopJS Report</h1></div>
     <div class="container summaryBlock">
       <h2 class='lead'>
-        <div class="stat">Passed <strong class='green circle'>{{passedCount}}</strong>&nbsp;&nbsp; Failed <strong class='red circle'>{{testPairsCompleted-passedCount}}</strong></div>
-        <div class="stat">{{testPairsCompleted}} of {{testPairs.length}}</div>
+        <div class="stat">Passed <strong class='green circle'>{{passedCount}}</strong>&nbsp;&nbsp; Failed <strong class='red circle'>{{currentTestPairsCompleted-passedCount}}</strong></div>
+        <div class="stat">{{currentTestPairsCompleted}} of {{currentTestPairs.length}}</div>
         <div class="stat">{{testDuration/1000 | number : 2}}s</div>
         <div class="progressBarBlock" ng-if="testIsRunning">
           <div class="progress">
-            <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{testPairsCompleted}}" aria-valuemin="0" aria-valuemax="{{testPairs.length}}" style="width: {{testPairsCompleted/testPairs.length*100| number : 0}}%">
-              <span class="sr-only">{{testPairsCompleted}} of {{testPairs.length}}</span>
+            <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{currentTestPairsCompleted}}" aria-valuemin="0" aria-valuemax="{{currentTestPairs.length}}" style="width: {{currentTestPairsCompleted/testPairs.length*100| number : 0}}%">
+              <span class="sr-only">{{currentTestPairsCompleted}} of {{currentTestPairs.length}}</span>
             </div>
           </div>
         </div>
       </h2>
       <table class="summaryList">
-        <tr ng-repeat="thisTestPair in testPairs">
+        <tr ng-repeat="thisTestPair in currentTestPairs">
           <td class="statusInds">
             <div class="indicator scanning" ng-if="thisTestPair.processing"><span class="dot yellow flash"></span>scanning</div>
             <div class="indicator failed" ng-if="!thisTestPair.passed&&!thisTestPair.processing"><span class="dot red"></span>failed</div>
@@ -52,7 +52,7 @@
 
       </div>
 
-      <table ng-repeat="thisTestPair in testPairs | filter : displayOnStatusFilter ">
+      <table ng-repeat="thisTestPair in currentTestPairs | filter : displayOnStatusFilter ">
         <thead>
           <tr>
             <th class="selector" colspan="2">{{ thisTestPair.meta.label }} {{ thisTestPair.meta.selector }}</th>
