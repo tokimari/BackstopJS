@@ -17,7 +17,14 @@
 <body ng-app="compareApp">
   <div id="root" ng-controller="MainCtrl">
     <div class="container"><h1>BackstopJS Report</h1></div>
+    <div class="container">
+      <div class='filterGroup form-group'>
+        <label for="testFilter" class="control-label">past tests</label>
+        <select id="testFilter" class="form-control" ng-model="currentTargetDate" ng-options="date for date in pastDates" ng-change="changeTarget()" ng-disabled="testIsRunning"></select>
+      </div>
+    </div>
     <div class="container summaryBlock">
+      <h3 class="">Target Date: {{ currentTargetDate }}</h3>
       <h2 class='lead'>
         <div class="stat">Passed <strong class='green circle'>{{passedCount}}</strong>&nbsp;&nbsp; Failed <strong class='red circle'>{{currentTestPairsCompleted-passedCount}}</strong></div>
         <div class="stat">{{currentTestPairsCompleted}} of {{currentTestPairs.length}}</div>

@@ -10,7 +10,7 @@ compareApp.config( function( $routeProvider ){
 });
 
 
-compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $http, $filter) {
+compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $http, $filter, $timeout) {
 
   var resembleTestConfig = {
     errorColor: {red: 255, green: 0, blue: 255},
@@ -22,12 +22,15 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   var defaultMisMatchThreshold = 1;
 
   //A TEST PAIR ARE TWO IMAGE OBJECTS PLUS THEIR META DATA WHICH WILL BE COMPARED BY RESEMBLE
-  $scope.currentTestPairs = [];
+  var reset = function() {
+    $scope.currentTestPairs = [];
+    $scope.currentTestPairsCompleted = 0;
+    $scope.passedCount = 0;
+    $scope.testDuration = 0;
+    $scope.testIsRunning = false;
+  }
 
-  $scope.currentTestPairsCompleted = 0;
-  $scope.passedCount = 0;
-  $scope.testDuration = 0;
-  $scope.testIsRunning = true;
+  reset();
 
 
   $scope.detailFilterOptions = ['failed','passed','all','none'];
@@ -48,8 +51,6 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   };
 
 
-
-
   var testPairObj = function(a,b,c,o){
     this.a={src:a||'',srcClass:'reference'},
     this.b={src:b||'',srcClass:'test'},
@@ -64,7 +65,6 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   $scope.$on("$routeChangeSuccess", function( $currentRoute, $previousRoute ){
     $scope.params = JSON.stringify($routeParams,null,2);
     $scope.action = $route.current.action;
-    console.log('routeChangeSuccess', $currentRoute, $previousRoute, $routeParams);
 
     if($scope.action=='url')
       $scope.runUrlConfig($routeParams);
@@ -89,18 +89,21 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
       .success(function(data, status) {
         console.log('got past test dates!',status,data);
         $scope.pastDates = data.dates;
-        $scope.runFileConfig(data.dates[data.dates.length - 1]); // latest date
+        $scope.currentTargetDate = data.dates[data.dates.length - 1]; // latest date
+        $scope.runFileConfig($scope.currentTargetDate);
       })
       .error(function(data, status) {
         console.log('config file operation failed '+status);
       });
   };
 
+
   // RUNS IMG DIFF TEST
   $scope.runFileConfig = function(captureDate) {
+    $scope.testIsRunning = true;
     $http.get('./config-' + captureDate + '.json')
       .success(function(data, status) {
-        console.log('got data!',status,data);
+        console.log('got data!',status,data,captureDate);
         data.testPairs.forEach(function(o,i,a){
           $scope.currentTestPairs.push(new testPairObj('../'+o.local_reference, '../'+o.local_test, null, o));
         });
@@ -126,8 +129,9 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
           if(o.passed)$scope.passedCount++;
           $scope.currentTestPairsCompleted++;
           $scope.testDuration = (new Date()-startTs);
-          $scope.$digest();
-          cb();
+          $timeout(function() {
+            cb();
+          }, 0);
         });
       }
       ,function(){
@@ -139,8 +143,6 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
         $scope.$digest();
       }
     );
-
-
 
   };
 
@@ -161,6 +163,12 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
     });
   };//scope.compareTestPair()
 
+
+  //CHANGE TEST DATA
+  $scope.changeTarget = function changeTarget() {
+    reset();
+    $scope.runFileConfig($scope.currentTargetDate);
+  }
 
 
 });
