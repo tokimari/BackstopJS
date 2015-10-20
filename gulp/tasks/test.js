@@ -3,6 +3,7 @@ var fs    = require('fs');
 var spawn = require('child_process').spawn;
 var paths = require('../util/paths');
 
+var pastTestListFileName = paths.comparePath + '/past_tests.json'
 
 
 //This task will generate a date-named directory with DOM screenshot files as specified in `./capture/config.json` followed by running a report.
@@ -81,7 +82,14 @@ gulp.task('test',['init'], function () {
     if(genReferenceMode || !resultConfig.testPairs||resultConfig.testPairs.length==0){
       console.log('\nRun `$ gulp test` to generate diff report.\n')
     }else{
-      gulp.run('report');
+
+      // write past test dates data
+      var pastTestsDate = fs.readdirSync(paths.bitmaps_test);
+      fs.writeFile(pastTestListFileName, JSON.stringify({
+        "dates": pastTestsDate
+      }), function(err) {
+        gulp.run('report');
+      });
     }
 
   });

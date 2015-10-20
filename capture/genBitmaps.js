@@ -7,7 +7,9 @@ var testDir = './bitmaps_test/';
 var genConfigPath = 'capture/config.json'
 var
   screenshotNow = new Date(),
-  screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
+  // FIXME: 引数にdatetimeを用いたconfigFileNameを指定しているため、キャプチャディレクトリ名と一致しない。commithashかconfigFileNameを使う。
+  //screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
+  screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes());
 
 
 var configJSON = fs.read(genConfigPath);
@@ -19,7 +21,7 @@ if (!config.paths) {
 
 var bitmaps_reference = config.paths.bitmaps_reference || 'bitmaps_reference';
 var bitmaps_test = config.paths.bitmaps_test || 'bitmaps_test';
-var compareConfigFileName = config.paths.compare_data || 'compare/config-' + screenshotDateTime + '.json';
+var compareConfigFileName = 'compare/' + config.paths.compare_data || 'compare/config-' + screenshotDateTime + '.json';
 var viewports = config.viewports;
 var scenarios = config.scenarios||config.grabConfigs;
 var scriptTimeout = config.script_timeout || 20000;
@@ -215,11 +217,14 @@ capturePageSelectors(
 );
 
 casper.run(function(){
-  complete();
+  if(!isReference){
+    complete();
+  }
   this.exit();
 });
 
 function complete(){
+  // Generate configFile on reference capturing.
   var configData = JSON.stringify(compareConfig,null,2);
   fs.touch(compareConfigFileName);
   fs.write(compareConfigFileName, configData, 'w');
