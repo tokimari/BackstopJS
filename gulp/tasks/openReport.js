@@ -8,6 +8,7 @@ var fs  = require('fs');
 var referenceDir = './bitmaps_reference/';
 var testDir = './bitmaps_test/';
 var pastTestListFileName = paths.comparePath + '/past_tests.json'
+var pastReferenceListFileName = paths.comparePath + '/past_references.json'
 
 gulp.task("openReport", function(){
 
@@ -15,7 +16,7 @@ gulp.task("openReport", function(){
   console.log('Opening report -> ',paths.compareReportURL + '\n');
 
   // write past test dates data
-  pastTestsDate = fs.readdirSync(paths.bitmaps_test);
+  var pastTestsDate = fs.readdirSync(paths.bitmaps_test);
   fs.writeFile(pastTestListFileName, JSON.stringify({
     "dates": pastTestsDate
   }), function(err) {
@@ -27,10 +28,6 @@ gulp.task("openReport", function(){
     app: isWin ? "chrome" : "Google Chrome"
   };
 
-  // cache bitmaps_reference files locally
-  gulp.src(paths.bitmaps_reference + '/**/*')
-    .pipe(gulp.dest(referenceDir));
-
   // cache bitmaps_test files locally
   gulp.src(paths.bitmaps_test + '/**/*')
     .pipe(gulp.dest(testDir));
@@ -38,8 +35,6 @@ gulp.task("openReport", function(){
   // FIXME: これ必要？？
   var openReport = function() {
     gulp.src(paths.compareConfigFileName)
-      .pipe(rename('compare/config.json'))
-      .pipe(gulp.dest('.'))
       .pipe(open("",options));
     }
 });

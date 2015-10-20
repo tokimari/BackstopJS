@@ -170,7 +170,6 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
             fs.write(filePath, assetData, 'b');
           }
 
-
           if (!isReference) {
             compareConfig.testPairs.push({
               reference:reference_FP,
@@ -179,8 +178,8 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
               fileName:fileName,
               label:scenario.label,
               misMatchThreshold: scenario.misMatchThreshold,
-              local_reference: referenceDir + reference_FP.split('/').slice(-1)[0],
-              local_test: testDir + test_FP.split('/').slice(-2).join('/')
+              local_reference: reference_FP,
+              local_test: test_FP
             });
           }
           //casper.echo('remote capture to > '+filePath,'info');

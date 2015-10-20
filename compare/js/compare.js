@@ -116,7 +116,6 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   };
 
 
-
   //LOOPS THROUGH TEST PAIR CONFIG AND CALLS compareTestPair(testPair) ON EACH ONE
   $scope.compareTestPairs = function compareTestPairs(testPairs){
     var startTs = new Date();
@@ -151,7 +150,6 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   //TEST AN INDIVIDUAL testPair OBJECT.  UPDATES THE OBJECT WITH RESULTS AND THEN RETURNS THE OBJECT WITH THE CALLBACK
   $scope.compareTestPair = function compareTestPair(testPair,cb){
     testPair.processing=true;
-
     resemble.outputSettings(resembleTestConfig);
 
     var diff = resemble(testPair.a.src).compareTo(testPair.b.src).onComplete(function(diffData){
@@ -169,6 +167,5 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
     reset();
     $scope.runFileConfig($scope.currentTargetDate);
   }
-
 
 });
