@@ -3,8 +3,6 @@ var fs    = require('fs');
 var spawn = require('child_process').spawn;
 var paths = require('../util/paths');
 
-var pastTestListFileName = paths.comparePath + '/past_tests.json'
-
 
 //This task will generate a date-named directory with DOM screenshot files as specified in `./capture/config.json` followed by running a report.
 //NOTE: If there is no bitmaps_reference directory or if the bitmaps_reference directory is empty then a new batch of reference files will be generated in the bitmaps_reference directory.  Reporting will be skipped in this case.
@@ -82,14 +80,7 @@ gulp.task('test',['init'], function () {
     if(genReferenceMode || !resultConfig.testPairs||resultConfig.testPairs.length==0){
       console.log('\nRun `$ gulp test` to generate diff report.\n')
     }else{
-
-      // write past test dates data
-      var pastTestsDate = fs.readdirSync(paths.bitmaps_test);
-      fs.writeFile(pastTestListFileName, JSON.stringify({
-        "dates": pastTestsDate
-      }), function(err) {
-        gulp.run('report');
-      });
+      gulp.run('report');
     }
 
   });

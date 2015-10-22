@@ -20,11 +20,14 @@
     <div class="container">
       <div class='filterGroup form-group'>
         <label for="testFilter" class="control-label">past tests</label>
-        <select id="testFilter" class="form-control" ng-model="currentTargetDate" ng-options="date for date in pastDates" ng-change="changeTarget()" ng-disabled="testIsRunning"></select>
+        <select id="testFilter" class="form-control" ng-model="currentTargetTest" ng-options="'[ ' + test.date + '-' + test.time + ' ] commit: '+ test.hash for test in pastTests" ng-change="changeTarget()" ng-disabled="testIsRunning"></select>
       </div>
     </div>
     <div class="container summaryBlock">
-      <h3 class="">Target Date: {{ currentTargetDate }}</h3>
+      <h3>Capture Datetime: {{currentTargetTest.date}}-{{currentTargetTest.time}}</h3>
+      <h4>Target Commit Hash: {{currentTargetTest.hash}}</h4>
+    </div>
+    <div class="container summaryBlock">
       <h2 class='lead'>
         <div class="stat">Passed <strong class='green circle'>{{passedCount}}</strong>&nbsp;&nbsp; Failed <strong class='red circle'>{{currentTestPairsCompleted-passedCount}}</strong></div>
         <div class="stat">{{currentTestPairsCompleted}} of {{currentTestPairs.length}}</div>

@@ -83,14 +83,22 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   };
 
 
-  //READS CONFIG FROM PAST TESTS DATE FILE
+  //READS CONFIG FROM PAST TESTS FILE
   $scope.runPastFilesConfig = function(params){
     $http.get('./past_tests.json')
       .success(function(data, status) {
-        console.log('got past test dates!',status,data);
-        $scope.pastDates = data.dates;
-        $scope.currentTargetDate = data.dates[data.dates.length - 1]; // latest date
-        $scope.runFileConfig($scope.currentTargetDate);
+        console.log('got past tests!',status,data);
+        $scope.pastTests = [];
+        data.tests.forEach(function(testName) {
+          var _splitTestName = testName.split(/-/);
+          $scope.pastTests.push({
+            date: _splitTestName[0],
+            time: _splitTestName[1],
+            hash: _splitTestName[2]
+          });
+        });
+        $scope.currentTargetTest = $scope.pastTests[$scope.pastTests.length - 1]; // latest date
+        $scope.runFileConfig($scope.currentTargetTest);
       })
       .error(function(data, status) {
         console.log('config file operation failed '+status);
@@ -99,11 +107,11 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
 
 
   // RUNS IMG DIFF TEST
-  $scope.runFileConfig = function(captureDate) {
+  $scope.runFileConfig = function(currentTestObj) {
     $scope.testIsRunning = true;
-    $http.get('./config-' + captureDate + '.json')
+    $http.get('./config-' + currentTestObj.hash + '.json')
       .success(function(data, status) {
-        console.log('got data!',status,data,captureDate);
+        console.log('got data!',status,data,currentTestObj);
         data.testPairs.forEach(function(o,i,a){
           $scope.currentTestPairs.push(new testPairObj('../'+o.local_reference, '../'+o.local_test, null, o));
         });
@@ -165,7 +173,7 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
   //CHANGE TEST DATA
   $scope.changeTarget = function changeTarget() {
     reset();
-    $scope.runFileConfig($scope.currentTargetDate);
+    $scope.runFileConfig($scope.currentTargetTest);
   }
 
 });

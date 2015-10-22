@@ -22,8 +22,6 @@ gulp.task("openReport", function(){
     .pipe(gulp.dest(testDir));
 
   // FIXME: これ必要？？
-  var openReport = function() {
-    gulp.src(paths.compareConfigFileName)
-      .pipe(open("",options));
-    }
+  gulp.src(paths.compareConfigFileName)
+    .pipe(open("",options));
 });

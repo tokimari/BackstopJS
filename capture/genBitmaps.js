@@ -5,12 +5,8 @@ var hiddenSelectorPath = 'capture/resources/hiddenSelector_noun_63405.png'
 var referenceDir = './bitmaps_reference/';
 var testDir = './bitmaps_test/';
 var genConfigPath = 'capture/config.json'
-var
-  screenshotNow = new Date(),
-  // FIXME: 引数にdatetimeを用いたconfigFileNameを指定しているため、キャプチャディレクトリ名と一致しない。commithashかconfigFileNameを使う。
-  //screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
-  screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes());
-
+var screenshotNow = new Date(),
+    screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
 
 var configJSON = fs.read(genConfigPath);
 var config = JSON.parse(configJSON);
@@ -19,9 +15,11 @@ if (!config.paths) {
   config.paths = {};
 }
 
+var capturedHash = config.captured_hash;
+
 var bitmaps_reference = config.paths.bitmaps_reference || 'bitmaps_reference';
 var bitmaps_test = config.paths.bitmaps_test || 'bitmaps_test';
-var compareConfigFileName = 'compare/' + config.paths.compare_data || 'compare/config-' + screenshotDateTime + '.json';
+var compareConfigFileName = 'compare/' + config.paths.compare_data || 'compare/config-' + capturedHash + '.json';
 var viewports = config.viewports;
 var scenarios = config.scenarios||config.grabConfigs;
 var scriptTimeout = config.script_timeout || 20000;
@@ -155,7 +153,7 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
           fileName = fileName + viewport_index + '_' + vp.name + '.png'
 
           var reference_FP  = bitmaps_reference + '/' + fileName;
-          var test_FP       = bitmaps_test + '/' + screenshotDateTime + '/' + fileName;
+          var test_FP       = bitmaps_test + '/' + screenshotDateTime + '-' + capturedHash + '/' + fileName;
 
           var filePath      = (isReference)?reference_FP:test_FP;
 
@@ -181,7 +179,9 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
               label:scenario.label,
               misMatchThreshold: scenario.misMatchThreshold,
               local_reference: reference_FP,
-              local_test: test_FP
+              local_test: test_FP,
+              captured_date: screenshotDateTime,
+              captured_hash: capturedHash
             });
           }
           //casper.echo('remote capture to > '+filePath,'info');
@@ -200,9 +200,11 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
 //========================
 //this query should be moved to the prior process
 //`isReference` could be better passed as env parameter
+
 var exists = fs.exists(bitmaps_reference);
 var isReference = false;
 if(!exists){isReference=true; console.log('CREATING NEW REFERENCE FILES')}
+
 //========================
 
 
@@ -217,9 +219,7 @@ capturePageSelectors(
 );
 
 casper.run(function(){
-  if(!isReference){
-    complete();
-  }
+  complete();
   this.exit();
 });
 
