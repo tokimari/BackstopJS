@@ -15,6 +15,7 @@ var bitmaps_test = config.paths.bitmaps_test || 'bitmaps_test';
 var compareConfigFileName = config.paths.compare_data || 'compare/config.json';
 var viewports = config.viewports;
 var scenarios = config.scenarios||config.grabConfigs;
+var CI_TEST_UA = config.user_agent;
 
 
 var compareConfig = {testPairs:[]};
@@ -57,6 +58,9 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
     screenshotNow = new Date(),
     screenshotDateTime = screenshotNow.getFullYear() + pad(screenshotNow.getMonth() + 1) + pad(screenshotNow.getDate()) + '-' + pad(screenshotNow.getHours()) + pad(screenshotNow.getMinutes()) + pad(screenshotNow.getSeconds());
 
+  if(CI_TEST_UA){
+    casper.userAgent(CI_TEST_UA);
+  }
   casper.start();
   // casper.viewport(1280,1024);
 
