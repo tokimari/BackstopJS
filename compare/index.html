@@ -20,12 +20,15 @@
     <div class="container">
       <div class='filterGroup form-group'>
         <label for="testFilter" class="control-label">past tests</label>
-        <select id="testFilter" class="form-control" ng-model="currentTargetTest" ng-options="'[ ' + test.date + '-' + test.time + ' ] commit: '+ test.hash for test in pastTests" ng-change="changeTarget()" ng-disabled="testIsRunning"></select>
+        <select id="testFilter" class="form-control" ng-model="currentTargetTest" ng-options="'[ ' + test.date + '-' + test.time + ' ] commit: '+ test.hash for test in pastTests" ng-change="changeTarget()"></select>
       </div>
     </div>
     <div class="container summaryBlock">
       <h3>Capture Datetime: {{currentTargetTest.date}}-{{currentTargetTest.time}}</h3>
-      <h4>Target Commit Hash: {{currentTargetTest.hash}}</h4>
+      <h4>Target Commit:
+        {{currentTargetTest.hash}}
+        GitHub: <a ng-href="https://{{currentTestPairs[0].meta.repository}}/commit/{{currentTargetTest.hash}}" target="_blank">{{currentTargetTest.hash}}</a>
+      </h4>
     </div>
     <div class="container summaryBlock">
       <h2 class='lead'>
@@ -48,7 +51,7 @@
             <div class="indicator passed" ng-if="thisTestPair.passed"><span class="dot green"></span>passed</div>
           </td>
           <td>
-            {{ thisTestPair.meta.label }} {{ thisTestPair.meta.selector }} <span class="fileName">{{ thisTestPair.meta.fileName }}</span>
+            {{ thisTestPair.meta.label }}<span class="fileName">{{ thisTestPair.meta.fileName }}</span>
           </td>
         </tr>
       </table>
@@ -65,7 +68,7 @@
       <table ng-repeat="thisTestPair in currentTestPairs | filter : displayOnStatusFilter ">
         <thead>
           <tr>
-            <th class="selector" colspan="2">{{ thisTestPair.meta.label }} {{ thisTestPair.meta.selector }}</th>
+            <th class="selector" colspan="2">{{ thisTestPair.meta.label }}</th>
             <th class="filename" colspan="2">{{ thisTestPair.meta.fileName }}</th>
           </tr>
           <tr>

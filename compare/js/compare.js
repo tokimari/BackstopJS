@@ -92,9 +92,9 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
         data.tests.forEach(function(testName) {
           var _splitTestName = testName.split(/-/);
           $scope.pastTests.push({
-            date: _splitTestName[0],
-            time: _splitTestName[1],
-            hash: _splitTestName[2]
+            date: _splitTestName.shift(),
+            time: _splitTestName.shift(),
+            hash: _splitTestName.join('-')
           });
         });
         $scope.currentTargetTest = $scope.pastTests[$scope.pastTests.length - 1]; // latest date

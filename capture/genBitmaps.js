@@ -23,6 +23,7 @@ var compareConfigFileName = 'compare/' + config.paths.compare_data || 'compare/c
 var viewports = config.viewports;
 var scenarios = config.scenarios||config.grabConfigs;
 var scriptTimeout = config.script_timeout || 20000;
+var repository = config.repository;
 var CI_TEST_UA = config.user_agent;
 
 
@@ -185,7 +186,8 @@ function capturePageSelectors(url,scenarios,viewports,bitmaps_reference,bitmaps_
               local_reference: reference_FP,
               local_test: test_FP,
               captured_date: screenshotDateTime,
-              captured_hash: capturedHash
+              captured_hash: capturedHash,
+              repository: repository
             });
           }
           //casper.echo('remote capture to > '+filePath,'info');
