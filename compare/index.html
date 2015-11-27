@@ -27,7 +27,7 @@
       <h3>Capture Datetime: {{currentTargetTest.date}}-{{currentTargetTest.time}}</h3>
       <h4>Target Commit:
         {{currentTargetTest.hash}}
-        GitHub: <a ng-href="https://{{currentTestPairs[0].meta.repository}}/commit/{{currentTargetTest.hash}}" target="_blank">{{currentTargetTest.hash}}</a>
+        GitHub: <a ng-href="{{currentTestPairs[0].meta.repository}}/commit/{{currentTargetTest.hash}}" target="_blank">{{currentTargetTest.hash}}</a>
       </h4>
     </div>
     <div class="container summaryBlock">
