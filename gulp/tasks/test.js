@@ -44,7 +44,8 @@ gulp.task('test',['init','cleanDuplicateTest'], function () {
 
   var tests = ['capture/genBitmaps.js'];
 
-  var args = ['--ssl-protocol=any'];// sent to casperjs (appended to cmd line)
+  // FIXME: HTTPS/2のサイトがSSL errorでキャプチャできないことがあるため、暫定的にオプションを追加
+  var args = ['--ssl-protocol=any', '--ignore-ssl-errors=true'];// sent to casperjs (appended to cmd line)
 
   // if (paths.engine === "slimerjs") args.push('--engine=slimerjs');
   if (paths.engine === 'slimerjs') args = ['--engine=slimerjs'];//'--ssl-protocol=any' failed in casper on windows when using slimerjs see PR#91
