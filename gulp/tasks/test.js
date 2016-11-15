@@ -76,14 +76,19 @@ gulp.task('test',['init','cleanDuplicateTest'], function () {
       return false;
     };
 
-
-    var resultConfig = JSON.parse(fs.readFileSync(paths.compareConfigFileName, 'utf8'));
+    var resultConfig = null;
+    try {
+      // resultConfig file generated when test execution.
+      resultConfig = JSON.parse(fs.readFileSync(paths.compareConfigFileName, 'utf8'));
+    } catch (err) {
+      console.log('\nYou have any regression tests. Run `$ gulp test` to generate diff report.\n');
+      return;
+    }
     if(genReferenceMode || !resultConfig.testPairs||resultConfig.testPairs.length==0){
       console.log('\nRun `$ gulp test` to generate diff report.\n')
     }else{
       gulp.run('report');
     }
-
   });
 
 

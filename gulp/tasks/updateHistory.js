@@ -12,13 +12,14 @@ gulp.task('updateHistory', function(cb){
   }
 
   var pastTestsDate = fs.readdirSync(paths.bitmaps_test);
-  console.log('update', pastTestsDate);
   fs.writeFile(pastTestListFileName, JSON.stringify({
     "tests": pastTestsDate
   }), function(err) {
     if(err) {
+      console.log('update: update error', pastTestsDate);
       return err;
     }
+    console.log('update end:', pastTestsDate);
     if(cb) cb();
   });
 });

@@ -225,18 +225,19 @@ capturePageSelectors(
 );
 
 casper.run(function(){
-  complete();
+  if(!isReference) {
+    updateConpareConfig();
+  }
   this.exit();
 });
 
-function complete(){
-  // Generate configFile on reference capturing.
+function updateConpareConfig(){
   var configData = JSON.stringify(compareConfig,null,2);
   fs.touch(compareConfigFileName);
   fs.write(compareConfigFileName, configData, 'w');
   console.log(
     'Comparison config file updated.'
-    //,configData
+    ,configData
   );
 }
 
