@@ -28,6 +28,7 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
     $scope.passedCount = 0;
     $scope.testDuration = 0;
     $scope.testIsRunning = false;
+    $scope.errorMsg = null;
   }
 
   reset();
@@ -102,6 +103,7 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
       })
       .error(function(data, status) {
         console.log('config file operation failed '+status);
+        $scope.errorMsg = data;
       });
   };
 
@@ -116,10 +118,10 @@ compareApp.controller('MainCtrl', function ($scope, $route, $routeParams, $q, $h
           $scope.currentTestPairs.push(new testPairObj('../'+o.local_reference, '../'+o.local_test, null, o));
         });
         $scope.compareTestPairs($scope.currentTestPairs);
-
       })
       .error(function(data, status) {
         console.log('config file operation failed '+status);
+        $scope.errorMsg = data;
       });
   };
 

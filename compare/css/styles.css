@@ -47,5 +47,6 @@ h2>.stat{white-space: nowrap;margin-right: 2em;display: inline-block;}
 .red{background: #c60000; }
 .green{background: #56e900; }
 .flash {animation: blink 350ms infinite alternate; -webkit-animation: blink 350ms infinite alternate; }
+.error {color: #c60000;animation: blink 600ms alternate; -webkit-animation: blink 600ms alternate; }
 @keyframes blink {to { opacity: 0; } }
 @-webkit-keyframes blink {to { opacity: 0; } }

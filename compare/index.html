@@ -29,6 +29,10 @@
         {{currentTargetTest.hash}}
         GitHub: <a ng-href="{{currentTestPairs[0].meta.repository}}/commit/{{currentTargetTest.hash}}" target="_blank">{{currentTargetTest.hash}}</a>
       </h4>
+      <div class="error flash" ng-if="errorMsg">
+        <b>{{errorMsg}}</b><br>
+        <span>Please retry regression test.</span>
+      </div>
     </div>
     <div class="container summaryBlock">
       <h2 class='lead'>
