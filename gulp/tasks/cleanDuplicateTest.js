@@ -23,11 +23,11 @@ gulp.task('cleanDuplicateTest', ['updateHistory'], function (cb) {
     return;
   }
   console.log('Checking duplicate commit tests.', pastTestList.tests);
-  pastTestList.tests.forEach(function(test) {
+  pastTestList.tests.some(function(test) {
     var matched = test.match(capturedHash);
     if(!matched) {
       if(cb) cb();
-      return;
+      return true;
     }
     console.log('Duplicate commit test files was cleaned.', test);
 
